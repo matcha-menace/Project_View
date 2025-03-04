@@ -44,6 +44,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""d9219bb9-c847-4e31-b7c0-a4a79944ea93"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -115,8 +124,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""58dcc9cf-4670-43da-8b70-a5810587c4eb"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""id"": ""3295c503-a01e-49ce-b277-04f0a588de04"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Player"",
@@ -126,12 +135,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""3295c503-a01e-49ce-b277-04f0a588de04"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""id"": ""bbe83890-9376-476d-ba16-8d51920b4dbd"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Player"",
-                    ""action"": ""Anticipate"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -150,6 +159,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Golf = asset.FindActionMap("Golf", throwIfNotFound: true);
         m_Golf_AimX = m_Golf.FindAction("AimX", throwIfNotFound: true);
         m_Golf_Anticipate = m_Golf.FindAction("Anticipate", throwIfNotFound: true);
+        m_Golf_Look = m_Golf.FindAction("Look", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -213,12 +223,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IGolfActions> m_GolfActionsCallbackInterfaces = new List<IGolfActions>();
     private readonly InputAction m_Golf_AimX;
     private readonly InputAction m_Golf_Anticipate;
+    private readonly InputAction m_Golf_Look;
     public struct GolfActions
     {
         private @PlayerControls m_Wrapper;
         public GolfActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @AimX => m_Wrapper.m_Golf_AimX;
         public InputAction @Anticipate => m_Wrapper.m_Golf_Anticipate;
+        public InputAction @Look => m_Wrapper.m_Golf_Look;
         public InputActionMap Get() { return m_Wrapper.m_Golf; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -234,6 +246,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Anticipate.started += instance.OnAnticipate;
             @Anticipate.performed += instance.OnAnticipate;
             @Anticipate.canceled += instance.OnAnticipate;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
         }
 
         private void UnregisterCallbacks(IGolfActions instance)
@@ -244,6 +259,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Anticipate.started -= instance.OnAnticipate;
             @Anticipate.performed -= instance.OnAnticipate;
             @Anticipate.canceled -= instance.OnAnticipate;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
         }
 
         public void RemoveCallbacks(IGolfActions instance)
@@ -274,5 +292,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnAimX(InputAction.CallbackContext context);
         void OnAnticipate(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
     }
 }

@@ -13,7 +13,9 @@ public class GolfController : MonoBehaviour
     [SerializeField] private float rotationSpeed;
 
     [SerializeField] private Slider strengthSlider;
+    [SerializeField] private LineRenderer lineRenderer;
     private bool _isAnticipating;
+    private float _anticipationTimer;
     
     [SerializeField] private BallBehavior ball;
 
@@ -34,6 +36,8 @@ public class GolfController : MonoBehaviour
         _controls.Golf.Anticipate.performed += ctx => { _isAnticipating = true; };
         _controls.Golf.Anticipate.canceled += ctx => { _isAnticipating = false; HitBall(); };
         _t ??= transform;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void OnCameraRotate(InputAction.CallbackContext ctx)
@@ -54,12 +58,13 @@ public class GolfController : MonoBehaviour
     {
         if (_isAnticipating)
         {
-            var value = strengthSlider.value < 0.9f ? 0.1f : -0.1f;
-            strengthSlider.value += value;
+            _anticipationTimer += Time.deltaTime;
+            strengthSlider.value = Mathf.PingPong(_anticipationTimer, 1);
         }
         else
         {
-            strengthSlider.value -= 0.1f;
+            strengthSlider.value = 0;
+            _anticipationTimer = 0;
         }
     }
 
@@ -67,5 +72,6 @@ public class GolfController : MonoBehaviour
     {
         if (ball.IsMoving) return;
         ball.HitBall(_t.forward.normalized, strengthSlider.value);
+        lineRenderer.enabled = false;
     }
 }
