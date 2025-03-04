@@ -9,7 +9,11 @@ public class BallBehavior : MonoBehaviour
     [SerializeField] private Transform controllerAnchor;
     private float _floorTimer;
     private float curSpeed;
-    private float contactTimePenalty = 0.005f;
+
+    [SerializeField] private float contactTimePenalty = 0.005f;
+    [SerializeField] private float vertSpeedThreshold = 0.01f;
+
+    [SerializeField] private float stopBallVelocityThreshold = 0.005f;
 
     private void Awake()
     {
@@ -21,12 +25,14 @@ public class BallBehavior : MonoBehaviour
         IsMoving = true;
         _rigidbody.AddForce(dir * force * 50, ForceMode.Impulse);
         _floorTimer = 0f;
+        GolfController.Instance.SetHittable(false);
+
     }
 
     private void Update()
     {
         // Check if the ball is contacting the floor
-        if (_rigidbody.velocity.y <= 0.01f && Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.5f))
+        if (_rigidbody.velocity.y <= vertSpeedThreshold && Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.5f))
         {
             // Debug.Log(curSpeed);
             _floorTimer += Time.deltaTime;
@@ -39,16 +45,33 @@ public class BallBehavior : MonoBehaviour
         }
 
         // Stop the ball if it's moving too slow
-        if (_rigidbody.velocity.magnitude < 0.1f)
+        // TODO: Optimize
+        if (_rigidbody.velocity.magnitude < stopBallVelocityThreshold)
         {
+            Debug.Log(_rigidbody.velocity.magnitude);
             _rigidbody.velocity = Vector3.zero;
             IsMoving = false;
+            Invoke("SetHittable", 1f);
+
+        }
+        else
+        {
+            GolfController.Instance.SetHittable(false);
+            IsMoving = true;
+        }
+    }
+
+    private void SetHittable()
+    {
+        if (!IsMoving)
+        {
+            GolfController.Instance.SetHittable(true);
         }
     }
 
     private void SetBallSpeed(float speed)
     {
-        if (_rigidbody.velocity.magnitude > 0.01f)
+        if (_rigidbody.velocity.magnitude > stopBallVelocityThreshold)
         {
             Vector3 direction = _rigidbody.velocity.normalized;
             _rigidbody.velocity = direction * speed; 
@@ -56,7 +79,6 @@ public class BallBehavior : MonoBehaviour
         else
         {
             _rigidbody.velocity = Vector3.zero;
-            IsMoving = false;
         }
     }
 
