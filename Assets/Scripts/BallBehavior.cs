@@ -28,7 +28,7 @@ public class BallBehavior : MonoBehaviour
         // Check if the ball is contacting the floor
         if (_rigidbody.velocity.y <= 0.01f && Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.5f))
         {
-            Debug.Log(curSpeed);
+            // Debug.Log(curSpeed);
             _floorTimer += Time.deltaTime;
             curSpeed = GetBallSpeed(_floorTimer, _rigidbody.velocity, _rigidbody.angularVelocity);
             SetBallSpeed(curSpeed);
@@ -66,7 +66,7 @@ public class BallBehavior : MonoBehaviour
         float linearSpeed = velocity.magnitude;
         // Apply friction over time if in contact with the floor
         float frictionFactor = Mathf.Max(0, 1f - (contactTime * contactTimePenalty)); // Adjust slowdown rate as needed
-        Debug.Log("Friction Factor" + frictionFactor);
+        // Debug.Log("Friction Factor" + frictionFactor);
 
         return linearSpeed * frictionFactor;
     }

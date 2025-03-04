@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class GolfController : MonoBehaviour
 {
+    public static GolfController Instance { get; private set; }
+    
     private PlayerControls _controls;
     private float _inputDir;
     private Transform _t;
@@ -38,6 +40,16 @@ public class GolfController : MonoBehaviour
         _t ??= transform;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     private void OnCameraRotate(InputAction.CallbackContext ctx)
@@ -68,10 +80,16 @@ public class GolfController : MonoBehaviour
         }
     }
 
+    public void SetHittable(bool isHittable)
+    {
+        lineRenderer.gameObject.SetActive(isHittable);
+        strengthSlider.gameObject.SetActive(isHittable);
+    }
+
     private void HitBall()
     {
         if (ball.IsMoving) return;
         ball.HitBall(_t.forward.normalized, strengthSlider.value);
-        lineRenderer.enabled = false;
+        SetHittable(false);
     }
 }
