@@ -8,6 +8,8 @@ public class BallBehavior : MonoBehaviour
     public bool IsMoving { get; set; }
     [SerializeField] private Transform controllerAnchor;
     private float _floorTimer;
+    private float curSpeed;
+    private float contactTimePenalty = 0.005f;
 
     private void Awake()
     {
@@ -17,36 +19,55 @@ public class BallBehavior : MonoBehaviour
     public void HitBall(Vector3 dir, float force)
     {
         IsMoving = true;
-        _rigidbody.AddForce(dir * force * 10, ForceMode.Impulse);
-        StartCoroutine(SlowDownRoutine());
+        _rigidbody.AddForce(dir * force * 50, ForceMode.Impulse);
+        _floorTimer = 0f;
     }
 
     private void Update()
     {
-        
-    }
-
-    private void SlowDown()
-    {
-        if (!IsMoving) return;
-    }
-
-    private IEnumerator SlowDownRoutine()
-    {
-        yield return new WaitForSeconds(0.5f);
-        
-        var deccelTimer = 0f;
-        while (deccelTimer < 1.5f)
+        // Check if the ball is contacting the floor
+        if (_rigidbody.velocity.y <= 0.01f && Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.5f))
         {
-            deccelTimer += Time.deltaTime;
-            _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, Vector3.zero, deccelTimer / 1.5f);
-            _rigidbody.angularVelocity = Vector3.Lerp(_rigidbody.angularVelocity, Vector3.zero, deccelTimer / 1.5f);
-            yield return null;
+            Debug.Log(curSpeed);
+            _floorTimer += Time.deltaTime;
+            curSpeed = GetBallSpeed(_floorTimer, _rigidbody.velocity, _rigidbody.angularVelocity);
+            SetBallSpeed(curSpeed);
         }
-        
-        _rigidbody.velocity = Vector3.zero;
-        _rigidbody.angularVelocity = Vector3.zero;
-        IsMoving = false;
-        controllerAnchor.position = transform.position;
+        else
+        {
+            _floorTimer = 0f;
+        }
+
+        // Stop the ball if it's moving too slow
+        if (_rigidbody.velocity.magnitude < 0.1f)
+        {
+            _rigidbody.velocity = Vector3.zero;
+            IsMoving = false;
+        }
+    }
+
+    private void SetBallSpeed(float speed)
+    {
+        if (_rigidbody.velocity.magnitude > 0.01f)
+        {
+            Vector3 direction = _rigidbody.velocity.normalized;
+            _rigidbody.velocity = direction * speed; 
+        }
+        else
+        {
+            _rigidbody.velocity = Vector3.zero;
+            IsMoving = false;
+        }
+    }
+
+    private float GetBallSpeed(float contactTime, Vector3 velocity, Vector3 angularVelocity)
+    {
+        // Linear speed magnitude
+        float linearSpeed = velocity.magnitude;
+        // Apply friction over time if in contact with the floor
+        float frictionFactor = Mathf.Max(0, 1f - (contactTime * contactTimePenalty)); // Adjust slowdown rate as needed
+        Debug.Log("Friction Factor" + frictionFactor);
+
+        return linearSpeed * frictionFactor;
     }
 }
