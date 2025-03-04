@@ -9,6 +9,7 @@ public class BallBehavior : MonoBehaviour
     [SerializeField] private Transform controllerAnchor;
     private float _floorTimer;
     private float curSpeed;
+    private float contactTimePenalty = 0.005f;
 
     private void Awake()
     {
@@ -18,14 +19,16 @@ public class BallBehavior : MonoBehaviour
     public void HitBall(Vector3 dir, float force)
     {
         IsMoving = true;
-        _rigidbody.AddForce(dir * force * 10, ForceMode.Impulse);
+        _rigidbody.AddForce(dir * force * 50, ForceMode.Impulse);
+        _floorTimer = 0f;
     }
 
     private void Update()
     {
         // Check if the ball is contacting the floor
-        if (_rigidbody.velocity.y <= 0.1f && Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.5f))
+        if (_rigidbody.velocity.y <= 0.01f && Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.5f))
         {
+            Debug.Log(curSpeed);
             _floorTimer += Time.deltaTime;
             curSpeed = GetBallSpeed(_floorTimer, _rigidbody.velocity, _rigidbody.angularVelocity);
             SetBallSpeed(curSpeed);
@@ -61,16 +64,10 @@ public class BallBehavior : MonoBehaviour
     {
         // Linear speed magnitude
         float linearSpeed = velocity.magnitude;
-
-        // Rotational speed contribution
-        float ballRadius = 1f;
-        float rotationalSpeed = angularVelocity.magnitude * ballRadius;
-
-        // (linear + rotational)
-        float speed = linearSpeed + rotationalSpeed;
-
         // Apply friction over time if in contact with the floor
-        float frictionFactor = Mathf.Max(0, 1f - (contactTime * 0.1f)); // Adjust slowdown rate as needed
-        return speed * frictionFactor;
+        float frictionFactor = Mathf.Max(0, 1f - (contactTime * contactTimePenalty)); // Adjust slowdown rate as needed
+        Debug.Log("Friction Factor" + frictionFactor);
+
+        return linearSpeed * frictionFactor;
     }
 }
