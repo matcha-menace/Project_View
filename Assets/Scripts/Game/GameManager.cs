@@ -14,7 +14,11 @@ public enum GameState
 public class GameManager : MonoBehaviour
 {
     public GameState currentState;
+    private GameState lastState;
     public static GameManager Instance { get; private set; }
+
+    private LevelManager sceneManager;
+    private int levelIndex;
 
     void Awake()
     {
@@ -28,11 +32,25 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject); // persist across levels
         }
+
+        sceneManager = new LevelManager();
+
     }
 
     void Start()
     {
         currentState = GameState.MainMenu;
+        sceneManager = LevelManager.Instance;
+
+    }
+
+    void Update()
+    {
+        if (currentState != lastState)
+        {
+            PerformActionOnStateChange();
+        }
+        lastState = currentState;
     }
 
     void OnDestroy()
@@ -43,11 +61,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void PerformActionOnStateChange()
+    {
+        if (currentState == GameState.paused){
+            Debug.Log("PAUCE");
+        }
+        else{
+            // go to level based on index
+            // get index of gamestate
+            levelIndex = (int)currentState;
+            // go to level based on gamestate
+            sceneManager.SwitchScene(levelIndex);
+        }
 
+    }
 
 
     public void UpdateState(GameState state)
     {
         currentState = state;
+        PerformActionOnStateChange();
     }
 }
