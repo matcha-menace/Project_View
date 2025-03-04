@@ -51,12 +51,21 @@ public class BallBehavior : MonoBehaviour
             Debug.Log(_rigidbody.velocity.magnitude);
             _rigidbody.velocity = Vector3.zero;
             IsMoving = false;
-            GolfController.Instance.SetHittable(true);
+            Invoke("SetHittable", 1f);
+
         }
         else
         {
             GolfController.Instance.SetHittable(false);
             IsMoving = true;
+        }
+    }
+
+    private void SetHittable()
+    {
+        if (!IsMoving)
+        {
+            GolfController.Instance.SetHittable(true);
         }
     }
 
