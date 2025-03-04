@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8454875537570812436}
   - component: {fileID: 4966940338590998543}
+  - component: {fileID: 3994749743548367771}
   m_Layer: 0
-  m_Name: Virtual Camera
+  m_Name: Ball Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,6 +73,20 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 7379968275907193041}
+--- !u!114 &3994749743548367771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109504558896879585}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 703d24015789e47c698d10d281fc8279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 5791693900785600800}
+  maxRotationSpeed: 90
 --- !u!1 &6759051532586421457
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,4 +364,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b5be1d8979aa436a9b56577f927cf24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerAnchor: {fileID: 0}
+  contactTimePenalty: 0.005
+  vertSpeedThreshold: 0.01
+  stopBallVelocityThreshold: 0.005

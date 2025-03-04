@@ -8,7 +8,7 @@ public enum GameState
     Lv3,
     Lv4,
     Lv5,
-    paused,
+    Paused,
 }
 
 public class GameManager : MonoBehaviour
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
 
     private void PerformActionOnStateChange()
     {
-        if (currentState == GameState.paused){
+        if (currentState == GameState.Paused){
             Debug.Log("PAUCE");
         }
         else{

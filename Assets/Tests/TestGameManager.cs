@@ -39,8 +39,8 @@ public class GameManagerTests
         Assert.AreEqual(GameState.Lv1, gameManager.currentState);
 
         // Change the state to Paused
-        gameManager.UpdateState(GameState.paused);
-        Assert.AreEqual(GameState.paused, gameManager.currentState);
+        gameManager.UpdateState(GameState.Paused);
+        Assert.AreEqual(GameState.Paused, gameManager.currentState);
 
         // Change the state back to MainMenu
         gameManager.UpdateState(GameState.MainMenu);

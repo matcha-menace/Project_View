@@ -6,8 +6,7 @@ public class BallBehavior : MonoBehaviour
 {
     private Rigidbody _rigidbody;
     public bool IsMoving { get; set; }
-    [SerializeField] private Transform controllerAnchor;
-    private float _floorTimer;
+    private float floorTimer;
     private float curSpeed;
 
     [SerializeField] private float contactTimePenalty = 0.005f;
@@ -24,7 +23,7 @@ public class BallBehavior : MonoBehaviour
     {
         IsMoving = true;
         _rigidbody.AddForce(dir * force * 50, ForceMode.Impulse);
-        _floorTimer = 0f;
+        floorTimer = 0f;
         GolfController.Instance.SetHittable(false);
 
     }
@@ -35,13 +34,13 @@ public class BallBehavior : MonoBehaviour
         if (_rigidbody.velocity.y <= vertSpeedThreshold && Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.5f))
         {
             // Debug.Log(curSpeed);
-            _floorTimer += Time.deltaTime;
-            curSpeed = GetBallSpeed(_floorTimer, _rigidbody.velocity, _rigidbody.angularVelocity);
+            floorTimer += Time.deltaTime;
+            curSpeed = GetBallSpeed(floorTimer, _rigidbody.velocity, _rigidbody.angularVelocity);
             SetBallSpeed(curSpeed);
         }
         else
         {
-            _floorTimer = 0f;
+            floorTimer = 0f;
         }
 
         // Stop the ball if it's moving too slow
@@ -51,7 +50,7 @@ public class BallBehavior : MonoBehaviour
             Debug.Log(_rigidbody.velocity.magnitude);
             _rigidbody.velocity = Vector3.zero;
             IsMoving = false;
-            Invoke("SetHittable", 1f);
+            Invoke(nameof(SetHittable), 1f);
 
         }
         else
