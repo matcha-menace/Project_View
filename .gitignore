@@ -65,5 +65,3 @@ crashlytics-build.properties
 # Test scene files
 InitTestScene*.unity
 InitTestScene*.unity.meta
-\tests
-tests.meta
