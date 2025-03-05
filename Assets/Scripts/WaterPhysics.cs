@@ -50,7 +50,7 @@ public class WaterPhysics: MonoBehaviour
 
     void OnTriggerStay(Collider other)
     { 
-        if (floatTypes.Contains(other.tag))
+        if (floatTypes.Contains(other.tag) && targetRigidBody)
         {
             // apply bouyancy while object is submerged
             ApplyBouyancy(other);
@@ -68,7 +68,8 @@ public class WaterPhysics: MonoBehaviour
 
         if (targetRigidBody.velocity.magnitude > waterBounceThreshold)
         {
-            targetRigidBody.velocity = Vector3.Reflect(targetRigidBody.velocity, Vector3.up);
+            targetRigidBody.velocity = Vector3.Reflect(targetRigidBody.velocity, Vector3.up) * 1.2f;
+            targetRigidBody = null;
         }
 
 
@@ -79,8 +80,11 @@ public class WaterPhysics: MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         // get rid of drag when object leaves water body
-        targetRigidBody.drag -= waterDrag;
-        targetRigidBody.angularDrag -= waterAngularDrag;
+        if(targetRigidBody){
+            targetRigidBody.drag -= waterDrag;
+            targetRigidBody.angularDrag -= waterAngularDrag;
+        }
+
     }
 
     void ApplyBouyancy(Collider other)
