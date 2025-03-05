@@ -17,8 +17,6 @@ public class WaterPhysics: MonoBehaviour
 
     [SerializeField] private float waterAngularDrag = 0.5f;
 
-    [SerializeField] private bool debug = false;
-
     [SerializeField] private float waterBounceThreshold = 40f;
 
 
@@ -87,15 +85,14 @@ public class WaterPhysics: MonoBehaviour
 
     void ApplyBouyancy(Collider other)
     {
-        if (debug){
-            Debug.Log("Applying Bouynancy To Game Object: " + other.gameObject);
-            Debug.Log("Min and max bounds: " + colliderMin.y + ", " + colliderMax.y);
-            Debug.Log("Object Location: " + other.transform.position.y);
-            Debug.Log("water volume: " + waterBodyVolume);
-        }
+        //Debug.Log("Applying Bouynancy To Game Object: " + other.gameObject);
+        //Debug.Log("Min and max bounds: " + colliderMin.y + ", " + colliderMax.y);
+        //Debug.Log("Object Location: " + other.transform.position.y);
+        //Debug.Log("water volume: " + waterBodyVolume);
+
 
         submergedVolume = ((waterBodyHeight - other.transform.position.y) / waterBodyHeight) * waterBodyVolume;
-        Debug.Log("Submerged water volume: " + submergedVolume);
+        //Debug.Log("Submerged water volume: " + submergedVolume);
 
         depth = colliderMax.y - other.transform.position.y;
         targetRigidBody.AddForce(CalculateWaterForce(submergedVolume));
