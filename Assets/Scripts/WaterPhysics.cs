@@ -7,12 +7,16 @@ public class WaterPhysics: MonoBehaviour
     // add different tags that can float
     [SerializeField] private string[] floatTypes = new string[] { "Player",};
 
+    [SerializeField] private float depthModifier = 1;
+
     private Collider m_collider;
     private Vector3 colliderMin;
 
     private Vector3 colliderMax;
 
     private Vector3 WaterPressure;
+
+    private float depth;
 
     void Start()
     {
@@ -35,6 +39,13 @@ public class WaterPhysics: MonoBehaviour
         Debug.Log("Applying Bouynancy To Game Object: " + other.gameObject);
         Debug.Log("Min and max bounds: " + colliderMin.y + ", " + colliderMax.y);
         Debug.Log("Object Location: " + other.transform.position.y);
-        other.GetComponent<Rigidbody>().AddForce(Vector3.up * bouyancy);
+
+        depth = colliderMax.y - other.transform.position.y;
+        other.GetComponent<Rigidbody>().AddForce(CalculateWaterForce(depth));
+    }
+
+    Vector3 CalculateWaterForce(float depth)
+    {
+        return (Vector3.up * bouyancy * depth * depthModifier);
     }
 }
