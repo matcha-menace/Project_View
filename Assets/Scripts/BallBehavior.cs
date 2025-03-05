@@ -48,7 +48,7 @@ public class BallBehavior : MonoBehaviour
         // TODO: Optimize
         if (_rigidbody.velocity.magnitude < stopBallVelocityThreshold)
         {
-            Debug.Log(_rigidbody.velocity.magnitude);
+            //Debug.Log(_rigidbody.velocity.magnitude);
             _rigidbody.velocity = Vector3.zero;
             IsMoving = false;
             Invoke(nameof(SetHittable), 1f);
