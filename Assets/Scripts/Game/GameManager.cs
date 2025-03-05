@@ -8,7 +8,7 @@ public enum GameState
     Lv3,
     Lv4,
     Lv5,
-    paused,
+    Paused,
 }
 
 public class GameManager : MonoBehaviour
@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     private LevelManager sceneManager;
     private int levelIndex;
+    
+    public static Vector3 lastSavedPosition;
 
     void Awake()
     {
@@ -63,7 +65,7 @@ public class GameManager : MonoBehaviour
 
     private void PerformActionOnStateChange()
     {
-        if (currentState == GameState.paused){
+        if (currentState == GameState.Paused){
             Debug.Log("PAUCE");
         }
         else{
@@ -81,5 +83,11 @@ public class GameManager : MonoBehaviour
     {
         currentState = state;
         PerformActionOnStateChange();
+    }
+
+    public void SavePosition(Vector3 pos)
+    {
+        // TODO: also save rotation
+        lastSavedPosition = pos;
     }
 }

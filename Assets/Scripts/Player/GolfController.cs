@@ -8,36 +8,39 @@ public class GolfController : MonoBehaviour
 {
     public static GolfController Instance { get; private set; }
     
-    private PlayerControls _controls;
-    private float _inputDir;
-    private Transform _t;
-    private float _rotation;
+    private PlayerControls playerControls;
+    private float inputDir;
+    private Transform t;
+    private float rotation;
     [SerializeField] private float rotationSpeed;
 
     [SerializeField] private Slider strengthSlider;
     [SerializeField] private LineRenderer lineRenderer;
-    private bool _isAnticipating;
-    private float _anticipationTimer;
+    private bool isAnticipating;
+    private float anticipationTimer;
     
     [SerializeField] private BallBehavior ball;
 
+    private bool isHittable;
+
     private void OnEnable()
     {
-        _controls.Golf.Enable();
+        playerControls.Golf.Enable();
     }
 
     private void OnDisable()
     {
-        _controls.Golf.Disable();
+        playerControls.Golf.Disable();
     }
 
     private void Awake()
     {
-        _controls = new PlayerControls();
-        _controls.Golf.AimX.performed += ctx => OnCameraRotate(ctx);
-        _controls.Golf.Anticipate.performed += ctx => { _isAnticipating = true; };
-        _controls.Golf.Anticipate.canceled += ctx => { _isAnticipating = false; HitBall(); };
-        _t ??= transform;
+        playerControls = new PlayerControls();
+        playerControls.Golf.AimX.performed += ctx => OnCameraRotate(ctx);
+        playerControls.Golf.Anticipate.performed += ctx => { isAnticipating = true; };
+        playerControls.Golf.Anticipate.canceled += ctx => { isAnticipating = false; HitBall(); };
+        playerControls.Golf.Reset.performed += OnReset;
+        t ??= transform;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         
@@ -52,44 +55,55 @@ public class GolfController : MonoBehaviour
         }
     }
 
+    private void OnReset(InputAction.CallbackContext obj)
+    {
+        ball.transform.position = GameManager.lastSavedPosition;
+        ball.Reset();
+    }
+
     private void OnCameraRotate(InputAction.CallbackContext ctx)
     {
-        _inputDir = ctx.ReadValue<float>();
+        inputDir = ctx.ReadValue<float>();
     }
     
     private void FixedUpdate()
     {
         // _rotation = Mathf.Lerp(_rotation, _inputDir, Time.deltaTime);
-        _t.rotation = 
-            Quaternion.Euler(_t.eulerAngles + Vector3.up * rotationSpeed * _inputDir * Time.deltaTime);
+        t.rotation = 
+            Quaternion.Euler(t.eulerAngles + Vector3.up * rotationSpeed * inputDir * Time.deltaTime);
 
         BuildUpStrength();
     }
 
     private void BuildUpStrength()
     {
-        if (_isAnticipating)
+        if (isAnticipating)
         {
-            _anticipationTimer += Time.deltaTime;
-            strengthSlider.value = Mathf.PingPong(_anticipationTimer, 1);
+            anticipationTimer += Time.deltaTime;
+            strengthSlider.value = Mathf.PingPong(anticipationTimer, 1);
         }
         else
         {
             strengthSlider.value = 0;
-            _anticipationTimer = 0;
+            anticipationTimer = 0;
         }
     }
 
     public void SetHittable(bool isHittable)
     {
+        if (isHittable == this.isHittable) return;
+        this.isHittable = isHittable;
         lineRenderer.gameObject.SetActive(isHittable);
         strengthSlider.gameObject.SetActive(isHittable);
+        var ballTransform = ball.transform;
+        t.position = ballTransform.position;
+        var targetRotation = Quaternion.Euler(0, ballTransform.eulerAngles.y, 0);
+        t.rotation = targetRotation;
     }
 
     private void HitBall()
     {
         if (ball.IsMoving) return;
-        ball.HitBall(_t.forward.normalized, strengthSlider.value);
-        SetHittable(false);
+        ball.HitBall(t.forward.normalized, strengthSlider.value);
     }
 }
