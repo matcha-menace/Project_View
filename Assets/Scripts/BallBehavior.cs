@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BallBehavior : MonoBehaviour
 {
-    private Rigidbody _rigidbody;
+    public Rigidbody _rigidbody;
     public bool IsMoving { get; set; }
     private float floorTimer;
     private float curSpeed;
@@ -12,7 +12,7 @@ public class BallBehavior : MonoBehaviour
     [SerializeField] private float contactTimePenalty = 0.005f;
     [SerializeField] private float vertSpeedThreshold = 0.01f;
 
-    [SerializeField] private float stopBallVelocityThreshold = 0.005f;
+    [SerializeField] public float stopBallVelocityThreshold = 0.005f;
 
     private void Awake()
     {
