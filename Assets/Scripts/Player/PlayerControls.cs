@@ -53,6 +53,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reset"",
+                    ""type"": ""Button"",
+                    ""id"": ""5c7fa4eb-2456-4dcb-884b-f738f4b0995b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -143,6 +152,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eadee72a-b751-4669-8cc7-f2eaf26141fe"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Player"",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -160,6 +180,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Golf_AimX = m_Golf.FindAction("AimX", throwIfNotFound: true);
         m_Golf_Anticipate = m_Golf.FindAction("Anticipate", throwIfNotFound: true);
         m_Golf_Look = m_Golf.FindAction("Look", throwIfNotFound: true);
+        m_Golf_Reset = m_Golf.FindAction("Reset", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -224,6 +245,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Golf_AimX;
     private readonly InputAction m_Golf_Anticipate;
     private readonly InputAction m_Golf_Look;
+    private readonly InputAction m_Golf_Reset;
     public struct GolfActions
     {
         private @PlayerControls m_Wrapper;
@@ -231,6 +253,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @AimX => m_Wrapper.m_Golf_AimX;
         public InputAction @Anticipate => m_Wrapper.m_Golf_Anticipate;
         public InputAction @Look => m_Wrapper.m_Golf_Look;
+        public InputAction @Reset => m_Wrapper.m_Golf_Reset;
         public InputActionMap Get() { return m_Wrapper.m_Golf; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -249,6 +272,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @Reset.started += instance.OnReset;
+            @Reset.performed += instance.OnReset;
+            @Reset.canceled += instance.OnReset;
         }
 
         private void UnregisterCallbacks(IGolfActions instance)
@@ -262,6 +288,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @Reset.started -= instance.OnReset;
+            @Reset.performed -= instance.OnReset;
+            @Reset.canceled -= instance.OnReset;
         }
 
         public void RemoveCallbacks(IGolfActions instance)
@@ -293,5 +322,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnAimX(InputAction.CallbackContext context);
         void OnAnticipate(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnReset(InputAction.CallbackContext context);
     }
 }

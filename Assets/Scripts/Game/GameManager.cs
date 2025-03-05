@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     private LevelManager sceneManager;
     private int levelIndex;
+    
+    public static Vector3 lastSavedPosition;
 
     void Awake()
     {
@@ -81,5 +83,11 @@ public class GameManager : MonoBehaviour
     {
         currentState = state;
         PerformActionOnStateChange();
+    }
+
+    public void SavePosition(Vector3 pos)
+    {
+        // TODO: also save rotation
+        lastSavedPosition = pos;
     }
 }

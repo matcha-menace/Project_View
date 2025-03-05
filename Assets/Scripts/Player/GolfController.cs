@@ -21,6 +21,8 @@ public class GolfController : MonoBehaviour
     
     [SerializeField] private BallBehavior ball;
 
+    private bool isHittable;
+
     private void OnEnable()
     {
         playerControls.Golf.Enable();
@@ -37,6 +39,7 @@ public class GolfController : MonoBehaviour
         playerControls.Golf.AimX.performed += ctx => OnCameraRotate(ctx);
         playerControls.Golf.Anticipate.performed += ctx => { isAnticipating = true; };
         playerControls.Golf.Anticipate.canceled += ctx => { isAnticipating = false; HitBall(); };
+        playerControls.Golf.Reset.performed += OnReset;
         t ??= transform;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -50,6 +53,12 @@ public class GolfController : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+    }
+
+    private void OnReset(InputAction.CallbackContext obj)
+    {
+        ball.transform.position = GameManager.lastSavedPosition;
+        ball.Reset();
     }
 
     private void OnCameraRotate(InputAction.CallbackContext ctx)
@@ -82,15 +91,19 @@ public class GolfController : MonoBehaviour
 
     public void SetHittable(bool isHittable)
     {
+        if (isHittable == this.isHittable) return;
+        this.isHittable = isHittable;
         lineRenderer.gameObject.SetActive(isHittable);
         strengthSlider.gameObject.SetActive(isHittable);
-        t.position = ball.transform.position;
+        var ballTransform = ball.transform;
+        t.position = ballTransform.position;
+        var targetRotation = Quaternion.Euler(0, ballTransform.eulerAngles.y, 0);
+        t.rotation = targetRotation;
     }
 
     private void HitBall()
     {
         if (ball.IsMoving) return;
         ball.HitBall(t.forward.normalized, strengthSlider.value);
-        SetHittable(false);
     }
 }

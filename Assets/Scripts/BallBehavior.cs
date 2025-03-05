@@ -17,6 +17,8 @@ public class BallBehavior : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        // TODO: temp
+        GameManager.Instance.SavePosition(transform.position);
     }
 
     public void HitBall(Vector3 dir, float force)
@@ -25,7 +27,6 @@ public class BallBehavior : MonoBehaviour
         _rigidbody.AddForce(dir * force * 50, ForceMode.Impulse);
         floorTimer = 0f;
         GolfController.Instance.SetHittable(false);
-
     }
 
     private void Update()
@@ -68,6 +69,14 @@ public class BallBehavior : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+        IsMoving = false;
+    }
+
     private void SetBallSpeed(float speed)
     {
         if (_rigidbody.velocity.magnitude > stopBallVelocityThreshold)
@@ -78,6 +87,7 @@ public class BallBehavior : MonoBehaviour
         else
         {
             _rigidbody.velocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
         }
     }
 
