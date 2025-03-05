@@ -20,12 +20,15 @@ public class SimpleTrap: MonoBehaviour{
 
     private float trapDelay;
 
+    [SerializeField] private bool playAnimation = false;
+
     
 
 
     void Start()
     {
-        anim = GetComponent<Animator>();
+        if (playAnimation){anim = GetComponent<Animator>();}
+        
 
         directionMap = new Dictionary<TrapOptions, Vector3>
         {
@@ -71,7 +74,9 @@ public class SimpleTrap: MonoBehaviour{
         if (animMap.TryGetValue(option, out string animationName))
         {
             Debug.Log("Attempting to play animation"+ animationName);
-            anim.Play(animationName);        
+            if (playAnimation){
+                anim.Play(animationName);
+            }
         }
 
         if (directionMap.TryGetValue(option, out Vector3 direction))
