@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9150955258416572418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2ad86e4537cab47875ae3d089430df, type: 3}
+  m_Name: Clickable Anticipation Outline
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  outlinePassSettings:
+    OutlinesRenderPassEvent: 450
+    OutlinesLayerMask:
+      serializedVersion: 2
+      m_Bits: 64
+    NormalsTextureSettings:
+      colorFormat: 0
+      depthBufferBits: 8
+      backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      filterMode: 0
+    OutlineMaterialSettings:
+      outlineScale: 1.5
+      crossMultiplier: 2.5
+      depthThreshold: 1
+      normalThreshold: 0.4
+      stepAngleThreshold: 1
+      stepAngleMultiplier: 20
+      outlineColor: {r: 1, g: 0.60967565, b: 0, a: 1}
+--- !u!114 &-8897372971528168396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2ad86e4537cab47875ae3d089430df, type: 3}
+  m_Name: Clickable Outline
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  outlinePassSettings:
+    OutlinesRenderPassEvent: 450
+    OutlinesLayerMask:
+      serializedVersion: 2
+      m_Bits: 192
+    NormalsTextureSettings:
+      colorFormat: 0
+      depthBufferBits: 8
+      backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      filterMode: 0
+    OutlineMaterialSettings:
+      outlineScale: 1.5
+      crossMultiplier: 2.5
+      depthThreshold: 1
+      normalThreshold: 0.4
+      stepAngleThreshold: 1
+      stepAngleMultiplier: 20
+      outlineColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &-1878332245247344467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,7 +115,9 @@ MonoBehaviour:
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
-  m_RendererFeatureMap: adc0de57c6d2eee5
+  - {fileID: -8897372971528168396}
+  - {fileID: -9150955258416572418}
+  m_RendererFeatureMap: adc0de57c6d2eee534dce6356c2e8684fe579622ad460181
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}

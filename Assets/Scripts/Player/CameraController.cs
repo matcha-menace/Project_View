@@ -6,38 +6,20 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    // private PlayerControls _controls;
-    // private float _inputDir;
-    // private Transform _t;
-    // private float _rotation;
-    // [SerializeField] private float rotationSpeed;
+    public Transform parent;  // Assign the ball object
+    public float maxRotationSpeed = 90f; // Degrees per second
 
-    private void OnEnable()
+    private void LateUpdate()
     {
-        // _controls.Room.Enable();
-    }
+        if (parent == null) return;
+        
+        transform.position = parent.position;
 
-    private void OnDisable()
-    {
-        // _controls.Room.Disable();
-    }
+        // Get the current rotation difference
+        Quaternion targetRotation = parent.rotation;
+        float maxDegreesDelta = maxRotationSpeed * Time.deltaTime;
 
-    private void Awake()
-    {
-        // _controls = new PlayerControls();
-        // _controls.Room.CameraRotate.performed += ctx => OnCameraRotate(ctx);
-        // _t ??= transform;
-    }
-
-    private void OnCameraRotate(InputAction.CallbackContext ctx)
-    {
-        // _inputDir = ctx.ReadValue<float>();
-    }
-    
-    private void FixedUpdate()
-    {
-        // _rotation = Mathf.Lerp(_rotation, _inputDir, Time.deltaTime);
-        // _t.rotation = 
-        //     Quaternion.Euler(_t.eulerAngles + Vector3.up * rotationSpeed * _rotation * Time.deltaTime);
+        // Smoothly rotate the child towards the parent with a speed limit
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxDegreesDelta);
     }
 }

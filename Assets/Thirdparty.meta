@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Thirdparty.meta
 guid: a885c04e0cdd186468421ca9f01d8dea
+========
+guid: b1bb7ccb3fbfbbe46acefbc6baeaa9be
+>>>>>>>> Jaden:Assets/HyperToon.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

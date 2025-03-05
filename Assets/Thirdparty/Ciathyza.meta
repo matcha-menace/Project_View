@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Thirdparty/Ciathyza.meta
 guid: 70b9c941ef1124745803eba857c82954
+========
+guid: ceb890c1a4e1ded4aa9e4c0ad66cdacc
+>>>>>>>> Jaden:Assets/Prefabs.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
