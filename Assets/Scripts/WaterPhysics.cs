@@ -17,6 +17,10 @@ public class WaterPhysics: MonoBehaviour
 
     [SerializeField] private float waterAngularDrag = 0.5f;
 
+    [SerializeField] private bool debug = false;
+
+    [SerializeField] private float waterBounceThreshold = 40f;
+
 
     private Collider m_collider;
 
@@ -60,6 +64,16 @@ public class WaterPhysics: MonoBehaviour
         // add drag and angular drag to submerged object
         targetRigidBody = other.GetComponent<Rigidbody>();
 
+        // bounce if velocity is too high
+        Debug.Log("Object entry velocity: " + targetRigidBody.velocity);
+        Debug.Log("Object entry velocity magnitude: " + targetRigidBody.velocity.magnitude);
+
+        if (targetRigidBody.velocity.magnitude > waterBounceThreshold)
+        {
+            targetRigidBody.velocity = Vector3.Reflect(targetRigidBody.velocity, Vector3.up);
+        }
+
+
         targetRigidBody.drag += waterDrag;
         targetRigidBody.angularDrag += waterAngularDrag;
     }
@@ -73,12 +87,13 @@ public class WaterPhysics: MonoBehaviour
 
     void ApplyBouyancy(Collider other)
     {
-        Debug.Log("Applying Bouynancy To Game Object: " + other.gameObject);
-        Debug.Log("Min and max bounds: " + colliderMin.y + ", " + colliderMax.y);
-        Debug.Log("Object Location: " + other.transform.position.y);
-        Debug.Log("water volume: " + waterBodyVolume);
+        if (debug){
+            Debug.Log("Applying Bouynancy To Game Object: " + other.gameObject);
+            Debug.Log("Min and max bounds: " + colliderMin.y + ", " + colliderMax.y);
+            Debug.Log("Object Location: " + other.transform.position.y);
+            Debug.Log("water volume: " + waterBodyVolume);
+        }
 
-    
         submergedVolume = ((waterBodyHeight - other.transform.position.y) / waterBodyHeight) * waterBodyVolume;
         Debug.Log("Submerged water volume: " + submergedVolume);
 
